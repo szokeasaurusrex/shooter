@@ -1,2 +1,2 @@
-# shooter
-A small 2d shooting game
+# Shooter
+Work in progress
