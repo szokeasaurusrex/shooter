@@ -3,6 +3,12 @@ Shooter
 
 This is a 2d arcade-style game in which the goal is to shoot circles coming from the top of the screen before they reach the bottom.
 
+Downloading the game
+--------------------
+
+1. Download the zip and extract it or use git to clone the repository into a directory.
+2. (Optional but recommended) Download the <a href="https://noto-website.storage.googleapis.com/pkgs/NotoSans-hinted.zip">Noto Sans</a> font. Extract the downloaded zip into a directory called *noto_fonts* and place it in the game directory.
+
 Objective
 ---------
 
