@@ -1,8 +1,18 @@
+function start() {
+	triangle = new Triangle();
+	circles = [];
+    circles[0] = new Circle(canvas.width / 2);
+    shots = [];
+    request = window.requestAnimationFrame(update);
+}
+
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     triangle.move();
     for (i = 0; i < circles.length; i++) {
-        circles[i].move();
+        if (circles[i].move() == "stop") {
+            return;
+        }
     }
     for (var i = 0; i < shots.length; i++) {
     	console.log(i);
@@ -26,7 +36,7 @@ function update() {
         shots[i].draw();
     }
     ctx.stroke();
-    window.requestAnimationFrame(update);
+    request = window.requestAnimationFrame(update);
 }
 
 function Triangle()
@@ -60,6 +70,7 @@ function Circle(x)
         this.y += circleSpeed;
         if (this.y >= canvas.height + circleRadius) {
             gameOver();
+            return "stop";
         }
     }
     this.draw = function () {
@@ -119,12 +130,13 @@ function drawShot(x, y)
 }
 
 function gameOver() {
+    window.cancelAnimationFrame(request);
     alert("Game over. You scored " + score + " points.");
-    location.reload();
+    start();
 }
 
 var canvas = document.getElementById("canvas");
-canvas.width = 1000;
+canvas.width = 900;
 canvas.height = canvas.width * 9 / 16;
 var ctx = canvas.getContext("2d");
 var triangleSize = 30;
@@ -140,12 +152,14 @@ var scoreDisplay = document.getElementById("score");
 ctx.fillStyle = "#000000";
 ctx.strokeStyle = "#000000";
 
-var triangle = new Triangle();
+//var triangle = new Triangle();
 var circles = [];
-circles[0] = new Circle(canvas.width / 2);
+//circles[0] = new Circle(canvas.width / 2);
 var shots = [];
 
-window.requestAnimationFrame(update);
+start();
+
+var request;
 
 window.onkeydown = function (event) {
     switch (event.keyCode) {

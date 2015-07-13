@@ -2,6 +2,7 @@ Shooter
 =======
 
 This is a 2d arcade-style game in which the goal is to shoot circles coming from the top of the screen before they reach the bottom.
+<a href="https://szokeasaurusrex.github.io/shooter">Play it now!</a>
 
 Downloading the game
 --------------------
