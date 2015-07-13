@@ -4,12 +4,15 @@ function update() {
     for (i = 0; i < circles.length; i++) {
         circles[i].move();
     }
-    for (i = 0; i < shots.length; i++) {
+    for (var i = 0; i < shots.length; i++) {
+    	console.log(i);
         if (shots[i].y <= 0) {
+        	console.log("Done: " + i + " at " + shots[i].y);
             shots.splice(i, 1);
         } else {
-            console.log("Ok: " + i);
+            //console.log("Ok: " + i);
             shots[i].move();
+            continue;
         }
     }
     ctx.beginPath()
@@ -34,11 +37,15 @@ function Triangle()
     this.speed = triangleSpeed;
     this.direction = null;
     this.move = function () {
-        if (this.direction == "right" && canvas.width - this.x) {
+        if (this.direction == "right" && canvas.width - this.x >= this.size/2) {
             this.x += this.speed;
-        } else if (this.direction == "left") {
+        } else if (this.direction == "left" && this.x >= this.size / 2) {
             this.x -= this.speed;
-        }
+        } else if (this.direction == "rightslow" && canvas.width - this.x >= this.size/2) {
+        	this.x += this.speed/2;
+        } else if (this.direction == "leftslow" && this.x >= this.size / 2) {
+            this.x -= this.speed/2;
+    	}
     }
     this.draw = function () {
         drawTriangle(this.x, this.y, this.size);
@@ -68,9 +75,13 @@ function Shot(x)
         this.y -= shotSpeed;
         for (i = 0; i < circles.length; i++) {
             if (this.y - shotLength <= circles[i].y + circleRadius && this.x >= circles[i].x - circleRadius && this.x <= circles[i].x + circleRadius) {
+                countToUp++;
                 circles.splice(i, 1);
-                circles.push(new Circle(Math.floor(Math.random() * (canvas.width + 1))));
-                circles.push(new Circle(Math.floor(Math.random() * (canvas.width + 1))));
+                if (countToUp == circles.length + 1) {
+                	circles.push(new Circle(Math.floor(Math.random() * (canvas.width - 2 * circleRadius + 1 + circleRadius))));
+                	countToUp = 0;
+                }
+                circles.push(new Circle(Math.floor(Math.random() * (canvas.width - 2 * circleRadius + 1 + circleRadius))));
                 score++;
                 scoreDisplay.innerHTML = score;
             }
@@ -118,19 +129,20 @@ canvas.height = canvas.width * 9 / 16;
 var ctx = canvas.getContext("2d");
 var triangleSize = 30;
 var triangleHeight = 50;
-var triangleSpeed = canvas.width / 60 / 2; //15 = 60/4
+var triangleSpeed = canvas.width / 60 / 2;
 var circleRadius = 15;
-var circleSpeed = canvas.height / 60 / 4;
-var shotSpeed = canvas.height / 1000;
+var circleSpeed = canvas.height / 60 / 8;
+var shotSpeed = canvas.height / 60;
 var shotLength = triangleSize / 2;
 var score = 0;
+var countToUp = 0;
 var scoreDisplay = document.getElementById("score");
 ctx.fillStyle = "#000000";
 ctx.strokeStyle = "#000000";
 
 var triangle = new Triangle();
 var circles = [];
-//circles[0] = new Circle(canvas.width / 2);
+circles[0] = new Circle(canvas.width / 2);
 var shots = [];
 
 window.requestAnimationFrame(update);
@@ -141,14 +153,22 @@ window.onkeydown = function (event) {
             //left
             if (triangle.direction === null) {
                 triangle.direction = "left";
+            } else if (triangle.direction == "slow") {
+            	triangle.direction = "leftslow"
             }
             break;
         case 39:
             //right
             if (triangle.direction === null) {
                 triangle.direction = "right";
+            } else if (triangle.direction == "slow") {
+            	triangle.direction = "rightslow"
             }
             break;
+        case 38:
+        	//up
+        	triangle.direction += "slow";
+        	break;
         case 32:
             //space
             shots.push(new Shot(triangle.x));
@@ -164,6 +184,16 @@ window.onkeyup = function (event) {
                 triangle.direction = null;
             }
             break;
+        case 38:
+        	//up
+        	if (triangle.direction == "rightslow") {
+        		triangle.direction = "right";
+        	} else if (triangle.direction == "leftslow") {
+        		triangle.direction = "left";
+        	} else {
+        		triangle.direction = null;
+        	}
+        	break;
         case 39:
             //right
             if (triangle.direction == "right") {
