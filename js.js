@@ -3,6 +3,9 @@ function start() {
 	circles = [];
     circles[0] = new Circle(canvas.width / 2);
     shots = [];
+    score = 0;
+    countToUp = 0;
+    scoreDisplay.innerHTML = score;
     request = window.requestAnimationFrame(update);
 }
 
@@ -146,8 +149,7 @@ var circleRadius = 15;
 var circleSpeed = canvas.height / 60 / 8;
 var shotSpeed = canvas.height / 60;
 var shotLength = triangleSize / 2;
-var score = 0;
-var countToUp = 0;
+var score, countToUp;
 var scoreDisplay = document.getElementById("score");
 ctx.fillStyle = "#000000";
 ctx.strokeStyle = "#000000";
