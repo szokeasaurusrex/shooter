@@ -1,11 +1,12 @@
 function start() {
-	triangle = new Triangle();
+    triangle = new Triangle();
 	circles = [];
     circles[0] = new Circle(canvas.width / 2);
     shots = [];
     score = 0;
     countToUp = 0;
     scoreDisplay.innerHTML = score;
+    delayToShoot = 0;
     request = window.requestAnimationFrame(update);
 }
 
@@ -39,6 +40,9 @@ function update() {
         shots[i].draw();
     }
     ctx.stroke();
+    if (delayToShoot != 0) {
+        delayToShoot--;
+    }
     request = window.requestAnimationFrame(update);
 }
 
@@ -146,13 +150,14 @@ var triangleSize = 30;
 var triangleHeight = 50;
 var triangleSpeed = canvas.width / 60 / 2;
 var circleRadius = 15;
-var circleSpeed = canvas.height / 60 / 8;
+var circleSpeed = canvas.height / 60 / 12;
 var shotSpeed = canvas.height / 60;
 var shotLength = triangleSize / 2;
 var score, countToUp;
 var scoreDisplay = document.getElementById("score");
 ctx.fillStyle = "#000000";
 ctx.strokeStyle = "#000000";
+var delayToShoot;
 
 //var triangle = new Triangle();
 var circles = [];
@@ -187,7 +192,10 @@ window.onkeydown = function (event) {
         	break;
         case 32:
             //space
-            shots.push(new Shot(triangle.x));
+            if (delayToShoot == 0) {
+                shots.push(new Shot(triangle.x));
+                delayToShoot = 30;
+            }
             break;
     }
 };
